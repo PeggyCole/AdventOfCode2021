@@ -21,6 +21,16 @@ for each ttLanternfish:
 end.
 
 message viSequenceCurrentValue view-as alert-box info. 
+
+/*
+---------------------------
+Information (Press HELP to view stack trace)
+---------------------------
+350149
+---------------------------
+OK   Help   
+---------------------------
+*/
   
 /* --- Internal Procedures --- */  
 procedure readFile:
@@ -60,13 +70,7 @@ procedure newDay:
 
    define buffer bttLanternFish for ttLanternFish.
    
-   for each ttLanternFish where ttLanternFish.ttUpToDate = ipiDay - 1 and ttLanternFish.ttTimer = 8:
-      assign
-         ttLanternFish.ttUpToDate = ipiDay
-         ttLanternFish.ttTimer = 7.        
-   end.                                
-   
-   for each ttLanternFish where ttLanternFish.ttUpToDate = ipiDay - 1 by ttLanternFish.ttTimer:
+   for each ttLanternFish where ttLanternFish.ttUpToDate = ipiDay - 1 by ttLanternFish.ttTimer desc:
      if ttLanternFish.ttTimer = 0 then
      do:
        assign
