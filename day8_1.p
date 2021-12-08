@@ -63,10 +63,10 @@ procedure solveLine:
 
   run fillttPattern (input ipcSignals).
   
-  run getNumber8. 
-  run getNumber1. 
-  run getNumber7. 
-  run getNumber4.
+  run getNumber (8, 7). // number8 (length: 7): only one with length = 7 
+  run getNumber (1, 2). // number1 (length: 2): only one with length = 2
+  run getNumber (7, 3). // number7 (length: 3): only one with length = 3
+  run getNumber (4, 4). // number4 (length: 4): only one with length = 4
   
   run AddToTotal (ipcFourDigits).   
 end procedure.
@@ -86,25 +86,14 @@ procedure fillTTPattern:
   end.
 end procedure.
 
-procedure getNumber1:  
-  find first ttPattern where length(ttPattern.ttSegments) = 2 and ttPattern.ttNumber = 99 no-error.
-  if avail ttPattern then ttPattern.ttNumber = 1.
-end procedure.  
-
-procedure getNumber4:  
-  find first ttPattern where length(ttPattern.ttSegments) = 4 and ttPattern.ttNumber = 99 no-error.
-  if avail ttPattern then ttPattern.ttNumber = 4.
-end procedure.
-
-procedure getNumber7:  
-  find first ttPattern where length(ttPattern.ttSegments) = 3 and ttPattern.ttNumber = 99 no-error.
-  if avail ttPattern then ttPattern.ttNumber = 7.
-end procedure.
- 
-procedure getNumber8:
-  find first ttPattern where length(ttPattern.ttSegments) = 7 and ttPattern.ttNumber = 99 no-error.
-  if avail ttPattern then ttPattern.ttNumber = 8.       
-end procedure.  
+procedure getNumber:  
+  define input  parameter ipiNumber  as integer   no-undo.  
+  define input  parameter ipiLength  as integer   no-undo.
+  
+  find first ttPattern where length(ttPattern.ttSegments) = ipiLength and ttPattern.ttNumber = 99 no-error.
+  if avail ttPattern then ttPattern.ttNumber = ipiNumber.
+      
+end procedure. 
 
 procedure AddToTotal:
   define input parameter ipcFourDigits as character no-undo.
