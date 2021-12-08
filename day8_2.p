@@ -98,10 +98,11 @@ procedure solveLine:
  /*fdaebc egc gc bgefc ecbagd becfa fagc afgbec gdcbfae bgdef | cgfa gcebad ebcadfg cefgbad*/
  
  
-  run getNumber8 (output vcArrayNumber[8 + Avoid0]). // number8 (length: 7): only one with length = 7 
-  run getNumber1 (output vcArrayNumber[1 + Avoid0]). // number1 (length: 2): only one with length = 2
-  run getNumber7 (output vcArrayNumber[7 + Avoid0]). // number7 (length: 3): only one with length = 3
-  run getNumber4 (output vcArrayNumber[4 + Avoid0]). // number4 (length: 4): only one with length = 4
+  run getNumber (8, 7, output vcArrayNumber[8 + Avoid0]). // number8 (length: 7): only one with length = 7 
+  run getNumber (1, 2, output vcArrayNumber[1 + Avoid0]). // number1 (length: 2): only one with length = 2
+  run getNumber (7, 3, output vcArrayNumber[7 + Avoid0]). // number7 (length: 3): only one with length = 3
+  run getNumber (4, 4, output vcArrayNumber[4 + Avoid0]). // number4 (length: 4): only one with length = 4
+  
   run getNumber3 (vcArrayNumber[1 + Avoid0], output vcArrayNumber[3 + Avoid0]).     // number3 (length: 5) = is the only one with length = 5 that contains all letters of number1 
   run getNumber9 (vcArrayNumber[3 + Avoid0], vcArrayNumber[4 + Avoid0], output vcArrayNumber[9 + Avoid0]).  // number9 (length: 6) = same letters as in (number3 + number4)
     
@@ -111,13 +112,13 @@ procedure solveLine:
   run getSegmentByDifference (vcArrayNumber[8 + Avoid0], vcArrayNumber[9 + Avoid0], output vcSegmentE). // difference between number8 and number9 is 1 segment --> segment E  
   
   run getNumber2 (vcSegmentE, output vcArrayNumber[2 + Avoid0]). // number2 (length:5): contains segment E 
-  run getNumber5 (output vcArrayNumber[5 + Avoid0]) . // number5 (length:5): only one left with length = 5
+  run getNumber (5, 5, output vcArrayNumber[5 + Avoid0]) . // number5 (length:5): only one left with length = 5
   
   run getSegmentByDifference (replace(vcArrayNumber[8 + Avoid0], vcSegmentB, ""), vcArrayNumber[2 + Avoid0], output vcSegmentF). // difference between (number8 - segmentB) and number2 is 1 segment --> segment F     
   run getSegmentByDifference (vcArrayNumber[9 + Avoid0], vcArrayNumber[5 + Avoid0], output vcSegmentC). // difference between number9 and number5 is 1 segment --> segment C  
    
   run getNumber0 (vcSegmentA, vcSegmentB, vcSegmentC, vcSegmentE, vcSegmentF, vcSegmentG, output vcArrayNumber[0 + Avoid0]). // number0 (length: 6): contains segments A, B, C, E, F, G
-  run getNumber6 (output vcArrayNumber[6 + Avoid0]). // number6: only one left    
+  run getNumber (6, 6, output vcArrayNumber[6 + Avoid0]). // number6: only one left    
    
   run AddToTotal (ipcFourDigits).   
 end procedure.
@@ -136,6 +137,18 @@ procedure fillTTPattern:
       ttPattern.ttSegments = fSortAlphabetically(entry(viCounter, ipcSignals, " ":u)).
   end.
 end procedure.
+
+procedure getNumber:  
+  define input  parameter ipiNumber  as integer   no-undo.  
+  define input  parameter ipiLength  as integer   no-undo.
+  define output parameter opcSegment as character no-undo.
+  
+  find first ttPattern where length(ttPattern.ttSegments) = ipiLength and ttPattern.ttNumber = 99 no-error.
+  if avail ttPattern then 
+     assign 
+       ttPattern.ttNumber = ipiNumber
+       opcSegment = ttPattern.ttSegments.
+end procedure. 
 
 procedure getNumber0:
   define input  parameter ipcSegmentA as character no-undo.
@@ -164,16 +177,6 @@ procedure getNumber0:
      opcSegment = ttPattern.ttSegments.  
    end.
 end procedure.
-
-procedure getNumber1:  
-  define output parameter opcSegment as character no-undo.
-  
-  find first ttPattern where length(ttPattern.ttSegments) = 2 and ttPattern.ttNumber = 99 no-error.
-  if avail ttPattern then 
-     assign 
-       ttPattern.ttNumber = 1
-       opcSegment = ttPattern.ttSegments.
-end procedure.  
 
 procedure getNumber2:
   define input parameter ipcSegementE as character no-undo.
@@ -205,62 +208,6 @@ procedure getNumber3:
  end.
  
 end procedure. 
-
-procedure getNumber4:  
-  define output parameter opcSegment as character no-undo.
-  
-  find first ttPattern where length(ttPattern.ttSegments) = 4 and ttPattern.ttNumber = 99 no-error.
-  if avail ttPattern then 
-    assign
-     ttPattern.ttNumber = 4
-     opcSegment = ttPattern.ttSegments.
-end procedure.
-
-procedure getNumber5:
-  define output parameter opcSegment as character no-undo.
-
-  find first ttPattern 
-    where length(ttPattern.ttSegments) = 5 
-    and ttPattern.ttNumber = 99
-    no-error.
-  if avail ttPattern then
-    assign
-      ttPattern.ttNumber = 5.
-      opcSegment = ttPattern.ttSegments.    
-end procedure.
-
-procedure getNumber6:
-  define output parameter opcSegment as character no-undo.
-  
-  find ttPattern 
-    where length(ttPattern.ttSegments) = 6
-    and ttPattern.ttNumber = 99
-    no-error.
-  if avail ttPattern then
-    assign
-      ttPattern.ttNumber = 6
-      opcSegment = ttPattern.ttSegments.  
-end procedure.
-
-procedure getNumber7:  
-  define output parameter opcSegment as character no-undo.
-  
-find first ttPattern where length(ttPattern.ttSegments) = 3 and ttPattern.ttNumber = 99 no-error.
- if avail ttPattern then
-   assign
-     ttPattern.ttNumber = 7
-     opcSegment = ttPattern.ttSegments.
-end procedure.
- 
-procedure getNumber8:
-  define output parameter opcSegment as character no-undo.
-  
-  find first ttPattern where length(ttPattern.ttSegments) = 7 and ttPattern.ttNumber = 99 no-error.
-   if avail ttPattern then
-     assign
-       ttPattern.ttNumber = 8
-       opcSegment = ttPattern.ttSegments.
-end procedure.  
 
 procedure getNumber9:
   define input  parameter ipcNumber3 as character no-undo.
